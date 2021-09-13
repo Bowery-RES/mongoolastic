@@ -1,6 +1,6 @@
 {
   "name": "@bowery-valuation/eslint-config-client",
-  "version": "0.0.0-semantically-released",
+  "version": "1.0.0",
   "description": "A mongoose plugin that indexes models into Elasticsearch 2 / 5 (an alternative to mongoosastic)",
   "tags": [
     "elasticsearch",
