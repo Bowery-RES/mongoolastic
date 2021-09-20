@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 
-const cp = require('child_process');
-const path = require('path');
+const cp = require("child_process");
+const path = require("path");
 
-const dockerImageName = 'elasticsearch-xp';
+const dockerImageName = "elasticsearch-xp";
 const version = process.argv[2] || 5;
 
 function isDockerImageExists(imageNameWithTag) {
   const imageId = cp
-    .execSync(`docker images -q ${imageNameWithTag}`, { cwd: '.' })
+    .execSync(`docker images -q ${imageNameWithTag}`, { cwd: "." })
     .toString();
   return imageId && imageId.length > 0;
 }
@@ -52,6 +52,6 @@ function onExit() {
   removeDockerContainer(version);
   process.exit(0);
 }
-process.on('SIGINT', onExit); // catch ctrl-c
-process.on('SIGTERM', onExit); // catch kill
+process.on("SIGINT", onExit); // catch ctrl-c
+process.on("SIGTERM", onExit); // catch kill
 runDockerContainer(version);

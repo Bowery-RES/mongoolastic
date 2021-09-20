@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
-const utils = require('../utils');
-const plugin = require('../../').v7;
+const mongoose = require("mongoose");
+const utils = require("../utils");
+const plugin = require("../../").v7;
 
-describe('esSynchronise', () => {
+describe("esSynchronise", () => {
   utils.setup();
 
-  it('should index the database', () => {
+  it("should index the database", () => {
     const users = [];
 
     // beware: indexing a document require two entry in the buffer
@@ -19,7 +19,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -40,15 +40,15 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           bulk: { size: bulkSize },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -60,20 +60,20 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
@@ -84,19 +84,19 @@ describe('esSynchronise', () => {
           return UserPluginModel;
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   expect(result.hits.total.value).to.eql(1);
                   const hit = result.hits.hits[0];
                   expect(hit._source.name).to.be.equal(user.name);
                   expect(hit._source.age).to.be.equal(user.age);
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });
@@ -105,7 +105,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index a subset', () => {
+  it("should index a subset", () => {
     const users = [];
 
     const UserSchema = new mongoose.Schema({
@@ -113,7 +113,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -133,12 +133,12 @@ describe('esSynchronise', () => {
           age: Number,
         });
 
-        UserPluginSchema.plugin(plugin, { index: 'users', type: 'user' });
+        UserPluginSchema.plugin(plugin, { index: "users", type: "user" });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -150,20 +150,20 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
@@ -174,13 +174,13 @@ describe('esSynchronise', () => {
           return UserPluginModel;
         });
       })
-      .then(UserPluginModel => {
-        return UserPluginModel.esSearch({ match_all: {} }).then(result => {
+      .then((UserPluginModel) => {
+        return UserPluginModel.esSearch({ match_all: {} }).then((result) => {
           expect(result.hits.total.value).to.eql(10);
-          const ids = result.hits.hits.map(hit => {
+          const ids = result.hits.hits.map((hit) => {
             return hit._id;
           });
-          const expected = users.slice(-10).map(user => {
+          const expected = users.slice(-10).map((user) => {
             return user._id.toString();
           });
           ids.sort();
@@ -190,7 +190,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index the database using projection', () => {
+  it("should index the database using projection", () => {
     const users = [];
 
     // beware: indexing a document require two entry in the buffer
@@ -202,7 +202,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -223,15 +223,15 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           bulk: { size: bulkSize },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -243,20 +243,20 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
@@ -267,19 +267,19 @@ describe('esSynchronise', () => {
           return UserPluginModel;
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   expect(result.hits.total.value).to.eql(1);
                   const hit = result.hits.hits[0];
                   expect(hit._source.name).to.be.equal(user.name);
                   expect(hit._source.age).to.be.equal(undefined);
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });
@@ -288,7 +288,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index the database in callback mode', () => {
+  it("should index the database in callback mode", () => {
     const users = [];
 
     // beware: indexing a document require two entry in the buffer
@@ -300,7 +300,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -321,15 +321,15 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           bulk: { size: bulkSize },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -341,25 +341,25 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
         return new utils.Promise((resolve, reject) => {
-          UserPluginModel.esSynchronize(err => {
+          UserPluginModel.esSynchronize((err) => {
             if (err) {
               reject(err);
               return;
@@ -371,19 +371,19 @@ describe('esSynchronise', () => {
           });
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   expect(result.hits.total.value).to.eql(1);
                   const hit = result.hits.hits[0];
                   expect(hit._source.name).to.be.equal(user.name);
                   expect(hit._source.age).to.be.equal(user.age);
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });
@@ -392,7 +392,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index a subset in callback mode', () => {
+  it("should index a subset in callback mode", () => {
     const users = [];
 
     const UserSchema = new mongoose.Schema({
@@ -400,7 +400,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -420,12 +420,12 @@ describe('esSynchronise', () => {
           age: Number,
         });
 
-        UserPluginSchema.plugin(plugin, { index: 'users', type: 'user' });
+        UserPluginSchema.plugin(plugin, { index: "users", type: "user" });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -437,25 +437,25 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
         return new utils.Promise((resolve, reject) => {
-          UserPluginModel.esSynchronize({ age: { $gte: 90 } }, err => {
+          UserPluginModel.esSynchronize({ age: { $gte: 90 } }, (err) => {
             if (err) {
               reject(err);
               return;
@@ -467,13 +467,13 @@ describe('esSynchronise', () => {
           });
         });
       })
-      .then(UserPluginModel => {
-        return UserPluginModel.esSearch({ match_all: {} }).then(result => {
+      .then((UserPluginModel) => {
+        return UserPluginModel.esSearch({ match_all: {} }).then((result) => {
           expect(result.hits.total.value).to.eql(10);
-          const ids = result.hits.hits.map(hit => {
+          const ids = result.hits.hits.map((hit) => {
             return hit._id;
           });
-          const expected = users.slice(-10).map(user => {
+          const expected = users.slice(-10).map((user) => {
             return user._id.toString();
           });
           ids.sort();
@@ -483,7 +483,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index the database using projection in callback mode', () => {
+  it("should index the database using projection in callback mode", () => {
     const users = [];
 
     // beware: indexing a document require two entry in the buffer
@@ -495,7 +495,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -516,15 +516,15 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           bulk: { size: bulkSize },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -536,25 +536,25 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
         return new utils.Promise((resolve, reject) => {
-          UserPluginModel.esSynchronize({}, 'age', err => {
+          UserPluginModel.esSynchronize({}, "age", (err) => {
             if (err) {
               reject(err);
               return;
@@ -566,19 +566,19 @@ describe('esSynchronise', () => {
           });
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   expect(result.hits.total.value).to.eql(1);
                   const hit = result.hits.hits[0];
                   expect(hit._source.name).to.be.equal(undefined);
                   expect(hit._source.age).to.be.equal(user.age);
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });
@@ -587,7 +587,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index the database using a mongoose query instance', () => {
+  it("should index the database using a mongoose query instance", () => {
     const users = [];
 
     // beware: indexing a document require two entry in the buffer
@@ -599,7 +599,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -620,15 +620,15 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           bulk: { size: bulkSize },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -640,26 +640,26 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let docSent = 0;
         let sent = 0;
         let error = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-sent', () => {
+        UserPluginModel.on("es-bulk-sent", () => {
           sent++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
         const query = UserPluginModel.find();
         return new utils.Promise((resolve, reject) => {
-          UserPluginModel.esSynchronize(query, err => {
+          UserPluginModel.esSynchronize(query, (err) => {
             if (err) {
               reject(err);
               return;
@@ -671,19 +671,19 @@ describe('esSynchronise', () => {
           });
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   expect(result.hits.total.value).to.eql(1);
                   const hit = result.hits.hits[0];
                   expect(hit._source.name).to.be.equal(user.name);
                   expect(hit._source.age).to.be.equal(user.age);
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });
@@ -692,7 +692,7 @@ describe('esSynchronise', () => {
       });
   });
 
-  it('should index filtering', () => {
+  it("should index filtering", () => {
     const users = [];
 
     const UserSchema = new mongoose.Schema({
@@ -700,7 +700,7 @@ describe('esSynchronise', () => {
       age: Number,
     });
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     return UserModel.deleteMany({})
       .exec()
@@ -721,17 +721,17 @@ describe('esSynchronise', () => {
         });
 
         UserPluginSchema.plugin(plugin, {
-          index: 'users',
-          type: 'user',
+          index: "users",
+          type: "user",
           filter(doc) {
             return doc.age >= 80;
           },
         });
 
         const UserPluginModel = mongoose.model(
-          'UserPlugin',
+          "UserPlugin",
           UserPluginSchema,
-          'users'
+          "users"
         );
 
         return utils
@@ -743,20 +743,20 @@ describe('esSynchronise', () => {
             return UserPluginModel;
           });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         let error = 0;
         let docSent = 0;
         let docFiltered = 0;
 
-        UserPluginModel.on('es-bulk-error', () => {
+        UserPluginModel.on("es-bulk-error", () => {
           error++;
         });
 
-        UserPluginModel.on('es-bulk-data', () => {
+        UserPluginModel.on("es-bulk-data", () => {
           docSent++;
         });
 
-        UserPluginModel.on('es-bulk-filtered', () => {
+        UserPluginModel.on("es-bulk-filtered", () => {
           docFiltered++;
         });
 
@@ -767,12 +767,12 @@ describe('esSynchronise', () => {
           return UserPluginModel;
         });
       })
-      .then(UserPluginModel => {
+      .then((UserPluginModel) => {
         return utils.Promise.all(
-          users.map(user => {
+          users.map((user) => {
             return new utils.Promise((resolve, reject) => {
               UserPluginModel.esSearch({ match: { _id: user._id.toString() } })
-                .then(result => {
+                .then((result) => {
                   if (user.age < 80) {
                     expect(result.hits.total.value).to.eql(0);
                   } else {
@@ -783,7 +783,7 @@ describe('esSynchronise', () => {
                   }
                   resolve();
                 })
-                .catch(err => {
+                .catch((err) => {
                   reject(err);
                 });
             });

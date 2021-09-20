@@ -1,14 +1,14 @@
 {
-  "extends": [
-    "airbnb-base",
-    "prettier"
-  ],
+  "extends": ["airbnb-base", "prettier"],
   "rules": {
-    "prettier/prettier": ["error", {
-      "trailingComma": "es5",
-      "singleQuote": true,
-      "printWidth": 80
-    }],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 80
+      }
+    ],
     "no-underscore-dangle": 0,
     "no-plusplus": 0,
     "no-use-before-define": 0,
@@ -27,8 +27,5 @@
   "env": {
     "mocha": true
   },
-  "plugins": [
-    "prettier",
-    "chai-expect"
-  ]
+  "plugins": ["prettier", "chai-expect"]
 }

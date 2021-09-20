@@ -45,13 +45,9 @@ script:
   - if [ "$ES" -eq "5" ]; then echo "RUNNING V5"; npm run-script test-v5-covered ; fi
   - if [ "$ES" -eq "6" ]; then echo "RUNNING V6"; npm run-script test-v6-covered ; fi
   - if [ "$ES" -eq "7" ]; then echo "RUNNING V7"; npm run-script test-v7-covered ; fi
-  
-
-
-
 
 after_success:
-  - 'curl -Lo travis_after_all.py https://git.io/travis_after_all'
+  - "curl -Lo travis_after_all.py https://git.io/travis_after_all"
   - python travis_after_all.py
   - export $(cat .to_export_back) &> /dev/null
   - if [[ "$TRAVIS_JOB_NUMBER" == *.1 ]]; then cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi

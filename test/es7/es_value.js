@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
-const utils = require('../utils');
-const plugin = require('../../').v7;
+const mongoose = require("mongoose");
+const utils = require("../utils");
+const plugin = require("../../").v7;
 
-describe('es_value', () => {
+describe("es_value", () => {
   utils.setup();
 
-  it('should handle es_value as a function', () => {
+  it("should handle es_value as a function", () => {
     let john;
 
     const Sub2Schema = new mongoose.Schema({
@@ -15,11 +15,11 @@ describe('es_value', () => {
       value: {
         type: String,
         es_value(value, context) {
-          expect(value).to.equal('x2');
+          expect(value).to.equal("x2");
           expect(context.document === john).to.be.true;
           expect(context.container === john.sub.sub2).to.be.true;
-          expect(context.field).to.eql('value');
-          return 'xyz';
+          expect(context.field).to.eql("value");
+          return "xyz";
         },
       },
     });
@@ -44,19 +44,19 @@ describe('es_value', () => {
           expect(age).to.equal(35);
           expect(context.document === john).to.be.true;
           expect(context.container === john).to.be.true;
-          expect(context.field).to.eql('age');
+          expect(context.field).to.eql("age");
           return age - (age % 10);
         },
       },
       tags: {
         type: [TagSchema],
-        es_type: 'text',
+        es_type: "text",
         es_value(tags, context) {
           expect(tags === john.tags).to.be.true;
           expect(context.document === john).to.be.true;
           expect(context.container === john).to.be.true;
-          expect(context.field).to.eql('tags');
-          return tags.map(tag => {
+          expect(context.field).to.eql("tags");
+          return tags.map((tag) => {
             return tag.value;
           });
         },
@@ -65,19 +65,19 @@ describe('es_value', () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     john = new UserModel({
-      name: 'John',
+      name: "John",
       age: 35,
       sub: {
-        sub1: 'x1',
+        sub1: "x1",
         sub2: {
-          value: 'x2',
+          value: "x2",
           nb: 7,
         },
       },
-      tags: [{ value: 'cool' }, { value: 'green' }],
+      tags: [{ value: "cool" }, { value: "green" }],
     });
 
     return utils
@@ -100,22 +100,22 @@ describe('es_value', () => {
           body: { query: { match_all: {} } },
         });
       })
-      .then(resp => {
+      .then((resp) => {
         expect(resp.hits.total.value).to.eql(1);
         const hit = resp.hits.hits[0];
         expect(hit._id).to.eql(john._id.toString());
         expect(hit._source).to.eql({
-          name: 'John',
+          name: "John",
           age: 30,
-          tags: ['cool', 'green'],
-          sub: { sub1: 'x1', sub2: { value: 'xyz' } },
+          tags: ["cool", "green"],
+          sub: { sub1: "x1", sub2: { value: "xyz" } },
         });
       });
   });
 
-  it('should handle es_value as a value', () => {
+  it("should handle es_value as a value", () => {
     const UserSchema = new mongoose.Schema({
-      name: { type: String, es_type: 'keyword' },
+      name: { type: String, es_type: "keyword" },
       numberArray: {
         type: Number,
         es_value: [1, 2, 3],
@@ -126,16 +126,16 @@ describe('es_value', () => {
       },
       stringArray: {
         type: [String],
-        es_value: ['az', 'er', 'ty'],
+        es_value: ["az", "er", "ty"],
       },
       obj: {
         type: String,
         es_type: {
-          a: { es_type: 'text' },
-          b: { es_type: 'integer' },
+          a: { es_type: "text" },
+          b: { es_type: "integer" },
         },
         es_value: {
-          a: 'azerty',
+          a: "azerty",
           b: 123,
         },
       },
@@ -143,17 +143,17 @@ describe('es_value', () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model('User', UserSchema);
+    const UserModel = mongoose.model("User", UserSchema);
 
     const john = new UserModel({
-      name: 'John',
+      name: "John",
       numberArray: 35,
       falsy: 98,
-      stringArray: ['GHJ'],
-      obj: 'obj',
+      stringArray: ["GHJ"],
+      obj: "obj",
     });
 
-    const bob = new UserModel({ name: 'Bob' });
+    const bob = new UserModel({ name: "Bob" });
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -177,33 +177,33 @@ describe('es_value', () => {
           type: options.type,
           body: {
             query: { match_all: {} },
-            sort: [{ name: { order: 'desc' } }],
+            sort: [{ name: { order: "desc" } }],
           },
         });
       })
-      .then(resp => {
+      .then((resp) => {
         expect(resp.hits.total.value).to.eql(2);
         let hit = resp.hits.hits[0];
         expect(hit._id).to.eql(john._id.toString());
         expect(hit._source).to.eql({
-          name: 'John',
+          name: "John",
           numberArray: [1, 2, 3],
           falsy: 0,
-          stringArray: ['az', 'er', 'ty'],
+          stringArray: ["az", "er", "ty"],
           obj: {
-            a: 'azerty',
+            a: "azerty",
             b: 123,
           },
         });
         hit = resp.hits.hits[1];
         expect(hit._id).to.eql(bob._id.toString());
         expect(hit._source).to.eql({
-          name: 'Bob',
+          name: "Bob",
           numberArray: [1, 2, 3],
           falsy: 0,
-          stringArray: ['az', 'er', 'ty'],
+          stringArray: ["az", "er", "ty"],
           obj: {
-            a: 'azerty',
+            a: "azerty",
             b: 123,
           },
         });
