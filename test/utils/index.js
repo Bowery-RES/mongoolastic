@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
@@ -9,9 +9,9 @@ function array(mixed) {
 }
 
 function setup() {
-  before((done) => {
+  before(done => {
     global.expect = require("chai").expect; // eslint-disable-line
-    mongoose.connect("mongodb://localhost/test", (err) => {
+    mongoose.connect('mongodb://localhost/test', err => {
       if (err) {
         done(err);
       } else {
@@ -24,7 +24,7 @@ function setup() {
     deleteMongooseModels();
   });
 
-  after((done) => {
+  after(done => {
     mongoose.disconnect(() => {
       done();
     });
@@ -33,8 +33,8 @@ function setup() {
 
 function deleteModelIndexes(models) {
   return Promise.all(
-    array(models).map((model) => {
-      return new Promise((resolve) => {
+    array(models).map(model => {
+      return new Promise(resolve => {
         const options = model.esOptions();
         const client = options.client;
         client.indices.delete({ index: options.index }, () => {
@@ -48,7 +48,7 @@ function deleteModelIndexes(models) {
 }
 
 function deleteMongooseModels() {
-  Object.keys(mongoose.models).forEach((name) => {
+  Object.keys(mongoose.models).forEach(name => {
     delete mongoose.models[name];
     delete mongoose.modelSchemas[name];
   });

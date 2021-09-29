@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v2;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v2;
 
-describe("es_extend", () => {
+describe('es_extend', () => {
   utils.setup();
 
-  it("should add some fields", () => {
+  it('should add some fields', () => {
     let john;
 
     const UserSchema = new mongoose.Schema(
@@ -17,11 +17,11 @@ describe("es_extend", () => {
       {
         es_extend: {
           num: {
-            es_type: "integer",
+            es_type: 'integer',
             es_value: 123,
           },
           length: {
-            es_type: "integer",
+            es_type: 'integer',
             es_value(document) {
               expect(document === john).to.be.true;
               return document.name.length;
@@ -33,10 +33,10 @@ describe("es_extend", () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     john = new UserModel({
-      name: "John",
+      name: 'John',
     });
 
     return utils
@@ -51,16 +51,16 @@ describe("es_extend", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
-        expect(properties).to.have.all.keys("name", "num", "length");
-        expect(properties.name.type).to.be.equal("string");
-        expect(properties.num.type).to.be.equal("integer");
-        expect(properties.length.type).to.be.equal("integer");
+        expect(properties).to.have.all.keys('name', 'num', 'length');
+        expect(properties.name.type).to.be.equal('string');
+        expect(properties.num.type).to.be.equal('integer');
+        expect(properties.length.type).to.be.equal('integer');
       })
       .then(() => {
-        return new utils.Promise((resolve) => {
-          john.on("es-indexed", () => {
+        return new utils.Promise(resolve => {
+          john.on('es-indexed', () => {
             resolve();
           });
           john.save();
@@ -74,10 +74,10 @@ describe("es_extend", () => {
           query: { match_all: {} },
         });
       })
-      .then((result) => {
+      .then(result => {
         expect(result.hits.total).to.eql(1);
         expect(result.hits.hits[0]._source).to.eql({
-          name: "John",
+          name: 'John',
           num: 123,
           length: 4,
         });

@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v7;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v7;
 
-describe("esRemove", () => {
+describe('esRemove', () => {
   utils.setup();
 
-  it("should be removed", () => {
+  it('should be removed', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
       age: Number,
@@ -15,11 +15,11 @@ describe("esRemove", () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
-    const john = new UserModel({ name: "John", age: 35 });
-    const jane = new UserModel({ name: "Jane", age: 34 });
-    const bob = new UserModel({ name: "Bob", age: 36 });
+    const john = new UserModel({ name: 'John', age: 35 });
+    const jane = new UserModel({ name: 'Jane', age: 34 });
+    const bob = new UserModel({ name: 'Bob', age: 36 });
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -39,7 +39,7 @@ describe("esRemove", () => {
                 _id: john._id.toString(),
               },
             },
-            { name: "John", age: 35 },
+            { name: 'John', age: 35 },
             {
               index: {
                 _index: options.index,
@@ -47,7 +47,7 @@ describe("esRemove", () => {
                 _id: jane._id.toString(),
               },
             },
-            { name: "Jane", age: 34 },
+            { name: 'Jane', age: 34 },
             {
               index: {
                 _index: options.index,
@@ -55,7 +55,7 @@ describe("esRemove", () => {
                 _id: bob._id.toString(),
               },
             },
-            { name: "Bob", age: 36 },
+            { name: 'Bob', age: 36 },
           ],
         });
       })
@@ -74,13 +74,13 @@ describe("esRemove", () => {
           body: { query: { match_all: {} } },
         });
       })
-      .then((resp) => {
-        const ids = resp.hits.hits.map((hit) => {
+      .then(resp => {
+        const ids = resp.hits.hits.map(hit => {
           return hit._id;
         });
         ids.sort();
 
-        const expectedIds = [john, bob].map((user) => {
+        const expectedIds = [john, bob].map(user => {
           return user._id.toString();
         });
 

@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v2;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v2;
 
-describe("model-mapping", () => {
+describe('model-mapping', () => {
   utils.setup();
 
-  it("should handle plugin settings", () => {
+  it('should handle plugin settings', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
@@ -17,31 +17,31 @@ describe("model-mapping", () => {
         analysis: {
           filter: {
             elision: {
-              type: "elision",
-              articles: ["l", "m", "t", "qu", "n", "s", "j", "d"],
+              type: 'elision',
+              articles: ['l', 'm', 't', 'qu', 'n', 's', 'j', 'd'],
             },
           },
           analyzer: {
             custom_french_analyzer: {
-              tokenizer: "letter",
+              tokenizer: 'letter',
               filter: [
-                "asciifolding",
-                "lowercase",
-                "french_stem",
-                "elision",
-                "stop",
+                'asciifolding',
+                'lowercase',
+                'french_stem',
+                'elision',
+                'stop',
               ],
             },
             tag_analyzer: {
-              tokenizer: "keyword",
-              filter: ["asciifolding", "lowercase"],
+              tokenizer: 'keyword',
+              filter: ['asciifolding', 'lowercase'],
             },
           },
         },
       },
     });
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -54,28 +54,28 @@ describe("model-mapping", () => {
           index: options.index,
         });
       })
-      .then((settings) => {
+      .then(settings => {
         const analysis = settings.users.settings.index.analysis;
         expect(analysis.analyzer).to.eql({
           custom_french_analyzer: {
-            tokenizer: "letter",
+            tokenizer: 'letter',
             filter: [
-              "asciifolding",
-              "lowercase",
-              "french_stem",
-              "elision",
-              "stop",
+              'asciifolding',
+              'lowercase',
+              'french_stem',
+              'elision',
+              'stop',
             ],
           },
           tag_analyzer: {
-            tokenizer: "keyword",
-            filter: ["asciifolding", "lowercase"],
+            tokenizer: 'keyword',
+            filter: ['asciifolding', 'lowercase'],
           },
         });
         expect(analysis.filter).to.eql({
           elision: {
-            type: "elision",
-            articles: ["l", "m", "t", "qu", "n", "s", "j", "d"],
+            type: 'elision',
+            articles: ['l', 'm', 't', 'qu', 'n', 's', 'j', 'd'],
           },
         });
       })
@@ -86,21 +86,21 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
-        expect(properties).to.have.all.keys("name");
-        expect(properties.name.type).to.be.equal("string");
+        expect(properties).to.have.all.keys('name');
+        expect(properties.name.type).to.be.equal('string');
       });
   });
 
-  it("should handle settings", () => {
+  it('should handle settings', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -109,24 +109,24 @@ describe("model-mapping", () => {
           analysis: {
             filter: {
               elision: {
-                type: "elision",
-                articles: ["l", "m", "t", "qu", "n", "s", "j", "d"],
+                type: 'elision',
+                articles: ['l', 'm', 't', 'qu', 'n', 's', 'j', 'd'],
               },
             },
             analyzer: {
               custom_french_analyzer: {
-                tokenizer: "letter",
+                tokenizer: 'letter',
                 filter: [
-                  "asciifolding",
-                  "lowercase",
-                  "french_stem",
-                  "elision",
-                  "stop",
+                  'asciifolding',
+                  'lowercase',
+                  'french_stem',
+                  'elision',
+                  'stop',
                 ],
               },
               tag_analyzer: {
-                tokenizer: "keyword",
-                filter: ["asciifolding", "lowercase"],
+                tokenizer: 'keyword',
+                filter: ['asciifolding', 'lowercase'],
               },
             },
           },
@@ -138,28 +138,28 @@ describe("model-mapping", () => {
           index: options.index,
         });
       })
-      .then((settings) => {
+      .then(settings => {
         const analysis = settings.users.settings.index.analysis;
         expect(analysis.analyzer).to.eql({
           custom_french_analyzer: {
-            tokenizer: "letter",
+            tokenizer: 'letter',
             filter: [
-              "asciifolding",
-              "lowercase",
-              "french_stem",
-              "elision",
-              "stop",
+              'asciifolding',
+              'lowercase',
+              'french_stem',
+              'elision',
+              'stop',
             ],
           },
           tag_analyzer: {
-            tokenizer: "keyword",
-            filter: ["asciifolding", "lowercase"],
+            tokenizer: 'keyword',
+            filter: ['asciifolding', 'lowercase'],
           },
         });
         expect(analysis.filter).to.eql({
           elision: {
-            type: "elision",
-            articles: ["l", "m", "t", "qu", "n", "s", "j", "d"],
+            type: 'elision',
+            articles: ['l', 'm', 't', 'qu', 'n', 's', 'j', 'd'],
           },
         });
       })
@@ -170,14 +170,14 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
-        expect(properties).to.have.all.keys("name");
-        expect(properties.name.type).to.be.equal("string");
+        expect(properties).to.have.all.keys('name');
+        expect(properties.name.type).to.be.equal('string');
       });
   });
 
-  it("should create an implicit mapping", () => {
+  it('should create an implicit mapping', () => {
     const deepEmbeddedSchema = new mongoose.Schema({
       _id: false,
       dn: Number,
@@ -205,7 +205,7 @@ describe("model-mapping", () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -219,41 +219,41 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
         expect(properties).to.have.all.keys(
-          "name",
-          "age",
-          "joined",
-          "tags",
-          "optin",
-          "plain",
-          "embedded"
+          'name',
+          'age',
+          'joined',
+          'tags',
+          'optin',
+          'plain',
+          'embedded'
         );
-        expect(properties.name.type).to.be.equal("string");
-        expect(properties.age.type).to.be.equal("double");
-        expect(properties.joined.type).to.be.equal("date");
-        expect(properties.tags.type).to.be.equal("string");
-        expect(properties.optin.type).to.be.equal("boolean");
+        expect(properties.name.type).to.be.equal('string');
+        expect(properties.age.type).to.be.equal('double');
+        expect(properties.joined.type).to.be.equal('date');
+        expect(properties.tags.type).to.be.equal('string');
+        expect(properties.optin.type).to.be.equal('boolean');
 
-        expect(properties.plain.properties).to.have.all.keys("x", "y", "z");
-        expect(properties.plain.properties.x.type).to.be.equal("string");
-        expect(properties.plain.properties.y.type).to.be.equal("double");
-        expect(properties.plain.properties.z.type).to.be.equal("boolean");
+        expect(properties.plain.properties).to.have.all.keys('x', 'y', 'z');
+        expect(properties.plain.properties.x.type).to.be.equal('string');
+        expect(properties.plain.properties.y.type).to.be.equal('double');
+        expect(properties.plain.properties.z.type).to.be.equal('boolean');
 
-        expect(properties.embedded.properties).to.have.all.keys("deep", "key");
-        expect(properties.embedded.properties.key.type).to.be.equal("string");
+        expect(properties.embedded.properties).to.have.all.keys('deep', 'key');
+        expect(properties.embedded.properties.key.type).to.be.equal('string');
 
         expect(properties.embedded.properties.deep.properties).to.have.all.keys(
-          "dn"
+          'dn'
         );
         expect(
           properties.embedded.properties.deep.properties.dn.type
-        ).to.be.equal("double");
+        ).to.be.equal('double');
       });
   });
 
-  it("should create an explicit mapping", () => {
+  it('should create an explicit mapping', () => {
     const deepImplicitEmbeddedSchema = new mongoose.Schema({
       _id: false,
       dn: Number,
@@ -290,7 +290,7 @@ describe("model-mapping", () => {
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -304,45 +304,45 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
         expect(properties).to.have.all.keys(
-          "name",
-          "tags",
-          "optin",
-          "embedded2"
+          'name',
+          'tags',
+          'optin',
+          'embedded2'
         );
-        expect(properties.name.type).to.be.equal("string");
-        expect(properties.tags.type).to.be.equal("string");
-        expect(properties.optin.type).to.be.equal("boolean");
+        expect(properties.name.type).to.be.equal('string');
+        expect(properties.tags.type).to.be.equal('string');
+        expect(properties.optin.type).to.be.equal('boolean');
 
-        expect(properties.embedded2.properties).to.have.all.keys("deep1");
+        expect(properties.embedded2.properties).to.have.all.keys('deep1');
 
         expect(
           properties.embedded2.properties.deep1.properties
-        ).to.have.all.keys("dn");
+        ).to.have.all.keys('dn');
         expect(
           properties.embedded2.properties.deep1.properties.dn.type
-        ).to.be.equal("double");
+        ).to.be.equal('double');
       });
   });
 
-  it("should propagate es options", () => {
+  it('should propagate es options', () => {
     const UserSchema = new mongoose.Schema({
       name: { type: String, es_boost: 2 },
-      age: { type: Number, es_type: "integer", es_boost: 1.5 },
+      age: { type: Number, es_type: 'integer', es_boost: 1.5 },
       joined: Date,
       optin: { type: Boolean, default: true },
       pos: {
         type: [Number],
-        index: "2dsphere",
-        es_type: "geo_point",
+        index: '2dsphere',
+        es_type: 'geo_point',
       },
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -356,27 +356,27 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
         expect(properties).to.have.all.keys(
-          "name",
-          "age",
-          "joined",
-          "optin",
-          "pos"
+          'name',
+          'age',
+          'joined',
+          'optin',
+          'pos'
         );
-        expect(properties.name.type).to.be.equal("string");
+        expect(properties.name.type).to.be.equal('string');
         expect(properties.name.boost).to.be.equal(2);
-        expect(properties.age.type).to.be.equal("integer");
+        expect(properties.age.type).to.be.equal('integer');
         expect(properties.age.boost).to.be.equal(1.5);
-        expect(properties.joined.type).to.be.equal("date");
-        expect(properties.optin.type).to.be.equal("boolean");
-        expect(properties.pos.type).to.be.equal("geo_point");
+        expect(properties.joined.type).to.be.equal('date');
+        expect(properties.optin.type).to.be.equal('boolean');
+        expect(properties.pos.type).to.be.equal('geo_point');
       });
   });
 
   // https://www.elastic.co/guide/en/elasticsearch/reference/2.0/nested.html
-  it("should handle nested datatype", () => {
+  it('should handle nested datatype', () => {
     const UserSchema = new mongoose.Schema({
       _id: false,
       first: String,
@@ -385,12 +385,12 @@ describe("model-mapping", () => {
 
     const GroupSchema = new mongoose.Schema({
       group: String,
-      user: { type: [UserSchema], es_type: "nested" },
+      user: { type: [UserSchema], es_type: 'nested' },
     });
 
     GroupSchema.plugin(plugin);
 
-    const GroupModel = mongoose.model("Group", GroupSchema);
+    const GroupModel = mongoose.model('Group', GroupSchema);
 
     return utils
       .deleteModelIndexes(GroupModel)
@@ -404,31 +404,31 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.groups.mappings.group.properties;
-        expect(properties).to.have.all.keys("group", "user");
-        expect(properties.group.type).to.be.equal("string");
-        expect(properties.user.type).to.be.equal("nested");
-        expect(properties.user.properties).to.have.all.keys("first", "last");
-        expect(properties.user.properties.first.type).to.be.equal("string");
-        expect(properties.user.properties.last.type).to.be.equal("string");
+        expect(properties).to.have.all.keys('group', 'user');
+        expect(properties.group.type).to.be.equal('string');
+        expect(properties.user.type).to.be.equal('nested');
+        expect(properties.user.properties).to.have.all.keys('first', 'last');
+        expect(properties.user.properties.first.type).to.be.equal('string');
+        expect(properties.user.properties.last.type).to.be.equal('string');
       })
       .then(() => {
-        return new utils.Promise((resolve) => {
+        return new utils.Promise(resolve => {
           const group = new GroupModel({
-            group: "fans",
+            group: 'fans',
             user: [
               {
-                first: "John",
-                last: "Smith",
+                first: 'John',
+                last: 'Smith',
               },
               {
-                first: "Alice",
-                last: "White",
+                first: 'Alice',
+                last: 'White',
               },
             ],
           });
-          group.on("es-indexed", () => {
+          group.on('es-indexed', () => {
             resolve();
           });
           return group.save();
@@ -441,18 +441,18 @@ describe("model-mapping", () => {
         return GroupModel.esSearch({
           query: {
             nested: {
-              path: "user",
+              path: 'user',
               query: {
                 bool: {
                   must: [
-                    { match: { "user.first": "Alice" } },
-                    { match: { "user.last": "Smith" } },
+                    { match: { 'user.first': 'Alice' } },
+                    { match: { 'user.last': 'Smith' } },
                   ],
                 },
               },
             },
           },
-        }).then((result) => {
+        }).then(result => {
           expect(result.hits.total).to.eql(0);
         });
       })
@@ -460,29 +460,29 @@ describe("model-mapping", () => {
         return GroupModel.esSearch({
           query: {
             nested: {
-              path: "user",
+              path: 'user',
               query: {
                 bool: {
                   must: [
-                    { match: { "user.first": "Alice" } },
-                    { match: { "user.last": "White" } },
+                    { match: { 'user.first': 'Alice' } },
+                    { match: { 'user.last': 'White' } },
                   ],
                 },
               },
             },
           },
-        }).then((result) => {
+        }).then(result => {
           expect(result.hits.total).to.eql(1);
           expect(result.hits.hits[0]._source).to.eql({
-            group: "fans",
+            group: 'fans',
             user: [
               {
-                first: "John",
-                last: "Smith",
+                first: 'John',
+                last: 'Smith',
               },
               {
-                first: "Alice",
-                last: "White",
+                first: 'Alice',
+                last: 'White',
               },
             ],
           });
@@ -506,7 +506,7 @@ describe("model-mapping", () => {
 
     const CompanySchema = new mongoose.Schema({
       name: String,
-      city: { type: mongoose.Schema.Types.ObjectId, ref: "City" },
+      city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
     });
 
     const UserSchema = new mongoose.Schema({
@@ -514,26 +514,26 @@ describe("model-mapping", () => {
       last: String,
       company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Company",
+        ref: 'Company',
         es_type: {
           _id: {
-            es_type: "string",
+            es_type: 'string',
           },
           name: {
-            es_type: "string",
+            es_type: 'string',
           },
           city: {
             es_type: {
               _id: {
-                es_type: "string",
+                es_type: 'string',
               },
               name: {
-                es_type: "string",
+                es_type: 'string',
               },
               tags: {
                 es_type: {
                   value: {
-                    es_type: "string",
+                    es_type: 'string',
                   },
                 },
               },
@@ -545,10 +545,10 @@ describe("model-mapping", () => {
 
     UserSchema.plugin(plugin);
 
-    const TagModel = mongoose.model("Tag", TagSchema);
-    const UserModel = mongoose.model("User", UserSchema);
-    const CompanyModel = mongoose.model("Company", CompanySchema);
-    const CityModel = mongoose.model("City", CitySchema);
+    const TagModel = mongoose.model('Tag', TagSchema);
+    const UserModel = mongoose.model('User', UserSchema);
+    const CompanyModel = mongoose.model('Company', CompanySchema);
+    const CityModel = mongoose.model('City', CitySchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -562,63 +562,63 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
-        expect(properties).to.have.all.keys("first", "last", "company");
-        expect(properties.first.type).to.be.equal("string");
-        expect(properties.last.type).to.be.equal("string");
+        expect(properties).to.have.all.keys('first', 'last', 'company');
+        expect(properties.first.type).to.be.equal('string');
+        expect(properties.last.type).to.be.equal('string');
         expect(properties.company.properties).to.have.all.keys(
-          "_id",
-          "name",
-          "city"
+          '_id',
+          'name',
+          'city'
         );
-        expect(properties.company.properties._id.type).to.be.equal("string");
-        expect(properties.company.properties.name.type).to.be.equal("string");
+        expect(properties.company.properties._id.type).to.be.equal('string');
+        expect(properties.company.properties.name.type).to.be.equal('string');
         expect(properties.company.properties.city.properties).to.have.all.keys(
-          "_id",
-          "name",
-          "tags"
+          '_id',
+          'name',
+          'tags'
         );
         expect(
           properties.company.properties.city.properties._id.type
-        ).to.be.equal("string");
+        ).to.be.equal('string');
         expect(
           properties.company.properties.city.properties.name.type
-        ).to.be.equal("string");
+        ).to.be.equal('string');
         expect(
           properties.company.properties.city.properties.tags.properties
-        ).to.have.all.keys("value");
+        ).to.have.all.keys('value');
         expect(
           properties.company.properties.city.properties.tags.properties.value
             .type
-        ).to.be.equal("string");
+        ).to.be.equal('string');
       })
       .then(() => {
-        return new utils.Promise((resolve) => {
+        return new utils.Promise(resolve => {
           const tag1 = new TagModel({
-            value: "nice",
+            value: 'nice',
           });
           const tag2 = new TagModel({
-            value: "cool",
+            value: 'cool',
           });
 
           city = new CityModel({
-            name: "Poitiers",
+            name: 'Poitiers',
             tags: [tag1, tag2],
           });
 
           company = new CompanyModel({
-            name: "Futuroscope",
+            name: 'Futuroscope',
             city,
           });
 
           user = new UserModel({
-            first: "Maurice",
-            last: "Moss",
+            first: 'Maurice',
+            last: 'Moss',
             company,
           });
 
-          user.on("es-indexed", () => {
+          user.on('es-indexed', () => {
             resolve();
           });
 
@@ -630,21 +630,21 @@ describe("model-mapping", () => {
       })
       .then(() => {
         return UserModel.esSearch({
-          query: { match: { first: "Maurice" } },
+          query: { match: { first: 'Maurice' } },
         });
       })
-      .then((result) => {
+      .then(result => {
         expect(result.hits.total).to.eql(1);
         expect(result.hits.hits[0]._source).to.eql({
-          first: "Maurice",
-          last: "Moss",
+          first: 'Maurice',
+          last: 'Moss',
           company: {
             _id: company._id.toString(),
-            name: "Futuroscope",
+            name: 'Futuroscope',
             city: {
               _id: city._id.toString(),
-              name: "Poitiers",
-              tags: [{ value: "nice" }, { value: "cool" }],
+              name: 'Poitiers',
+              tags: [{ value: 'nice' }, { value: 'cool' }],
             },
           },
         });
@@ -666,13 +666,13 @@ describe("model-mapping", () => {
       books: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Book",
+          ref: 'Book',
           es_type: {
             _id: {
-              es_type: "string",
+              es_type: 'string',
             },
             name: {
-              es_type: "string",
+              es_type: 'string',
             },
           },
         },
@@ -681,8 +681,8 @@ describe("model-mapping", () => {
 
     UserSchema.plugin(plugin);
 
-    const BookModel = mongoose.model("Book", BookSchema);
-    const UserModel = mongoose.model("User", UserSchema);
+    const BookModel = mongoose.model('Book', BookSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -696,32 +696,32 @@ describe("model-mapping", () => {
           type: options.type,
         });
       })
-      .then((mapping) => {
+      .then(mapping => {
         const properties = mapping.users.mappings.user.properties;
-        expect(properties).to.have.all.keys("first", "last", "books");
-        expect(properties.first.type).to.be.equal("string");
-        expect(properties.last.type).to.be.equal("string");
-        expect(properties.books.properties).to.have.all.keys("_id", "name");
-        expect(properties.books.properties._id.type).to.be.equal("string");
-        expect(properties.books.properties.name.type).to.be.equal("string");
+        expect(properties).to.have.all.keys('first', 'last', 'books');
+        expect(properties.first.type).to.be.equal('string');
+        expect(properties.last.type).to.be.equal('string');
+        expect(properties.books.properties).to.have.all.keys('_id', 'name');
+        expect(properties.books.properties._id.type).to.be.equal('string');
+        expect(properties.books.properties.name.type).to.be.equal('string');
       })
       .then(() => {
-        return new utils.Promise((resolve) => {
+        return new utils.Promise(resolve => {
           book1 = new BookModel({
-            name: "The Jungle Book",
+            name: 'The Jungle Book',
           });
 
           book2 = new BookModel({
-            name: "1984",
+            name: '1984',
           });
 
           user = new UserModel({
-            first: "Maurice",
-            last: "Moss",
+            first: 'Maurice',
+            last: 'Moss',
             books: [book1, book2],
           });
 
-          user.on("es-indexed", () => {
+          user.on('es-indexed', () => {
             resolve();
           });
 
@@ -733,22 +733,22 @@ describe("model-mapping", () => {
       })
       .then(() => {
         return UserModel.esSearch({
-          query: { query_string: { query: "Jungle" } },
+          query: { query_string: { query: 'Jungle' } },
         });
       })
-      .then((result) => {
+      .then(result => {
         expect(result.hits.total).to.eql(1);
         expect(result.hits.hits[0]._source).to.eql({
-          first: "Maurice",
-          last: "Moss",
+          first: 'Maurice',
+          last: 'Moss',
           books: [
             {
               _id: book1._id.toString(),
-              name: "The Jungle Book",
+              name: 'The Jungle Book',
             },
             {
               _id: book2._id.toString(),
-              name: "1984",
+              name: '1984',
             },
           ],
         });
@@ -771,7 +771,7 @@ describe("model-mapping", () => {
 
     const CompanySchema = new mongoose.Schema({
       name: String,
-      city: { type: mongoose.Schema.Types.ObjectId, ref: "City" },
+      city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
     });
 
     const UserSchema = new mongoose.Schema({
@@ -779,26 +779,26 @@ describe("model-mapping", () => {
       last: String,
       company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Company",
+        ref: 'Company',
         es_type: {
           _id: {
-            es_type: "string",
+            es_type: 'string',
           },
           name: {
-            es_type: "string",
+            es_type: 'string',
           },
           city: {
             es_type: {
               _id: {
-                es_type: "string",
+                es_type: 'string',
               },
               name: {
-                es_type: "string",
+                es_type: 'string',
               },
               tags: {
                 es_type: {
                   value: {
-                    es_type: "string",
+                    es_type: 'string',
                   },
                 },
               },
@@ -810,10 +810,10 @@ describe("model-mapping", () => {
 
     UserSchema.plugin(plugin);
 
-    const TagModel = mongoose.model("Tag", TagSchema);
-    const UserModel = mongoose.model("User", UserSchema);
-    const CompanyModel = mongoose.model("Company", CompanySchema);
-    const CityModel = mongoose.model("City", CitySchema);
+    const TagModel = mongoose.model('Tag', TagSchema);
+    const UserModel = mongoose.model('User', UserSchema);
+    const CompanyModel = mongoose.model('Company', CompanySchema);
+    const CityModel = mongoose.model('City', CitySchema);
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -821,31 +821,31 @@ describe("model-mapping", () => {
         return UserModel.esCreateMapping();
       })
       .then(() => {
-        return new utils.Promise((resolve) => {
+        return new utils.Promise(resolve => {
           const tag1 = new TagModel({
-            value: "nice",
+            value: 'nice',
           });
           const tag2 = new TagModel({
-            value: "cool",
+            value: 'cool',
           });
 
           city = new CityModel({
-            name: "Poitiers",
+            name: 'Poitiers',
             tags: [tag1, tag2],
           });
 
           company = new CompanyModel({
-            name: "Futuroscope",
+            name: 'Futuroscope',
             city,
           });
 
           user = new UserModel({
-            first: "Maurice",
-            last: "Moss",
+            first: 'Maurice',
+            last: 'Moss',
             company: company._id,
           });
 
-          user.on("es-indexed", () => {
+          user.on('es-indexed', () => {
             resolve();
           });
 
@@ -857,14 +857,14 @@ describe("model-mapping", () => {
       })
       .then(() => {
         return UserModel.esSearch({
-          query: { match: { first: "Maurice" } },
+          query: { match: { first: 'Maurice' } },
         });
       })
-      .then((result) => {
+      .then(result => {
         expect(result.hits.total).to.eql(1);
         expect(result.hits.hits[0]._source).to.eql({
-          first: "Maurice",
-          last: "Moss",
+          first: 'Maurice',
+          last: 'Moss',
           company: { _id: company.id },
         });
       });

@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
+const mongoose = require('mongoose');
+const utils = require('../utils');
 
-const plugin = require("../../").v5;
+const plugin = require('../../').v5;
 
-describe("promise", () => {
+describe('promise', () => {
   utils.setup();
 
-  it("should return promise", () => {
+  it('should return promise', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
     const promise = UserModel.esCreateMapping();
     expect(promise).to.be.an.instanceof(Promise);
   });

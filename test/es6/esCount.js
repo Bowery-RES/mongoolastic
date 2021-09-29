@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v5;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v5;
 
-describe("esCount", () => {
+describe('esCount', () => {
   utils.setup();
   let UserModel;
 
@@ -15,11 +15,11 @@ describe("esCount", () => {
     });
 
     UserSchema.plugin(plugin);
-    UserModel = mongoose.model("User", UserSchema);
+    UserModel = mongoose.model('User', UserSchema);
 
-    const john = new UserModel({ name: "John", age: 35 });
-    const jane = new UserModel({ name: "Jane", age: 34 });
-    const bob = new UserModel({ name: "Bob", age: 36 });
+    const john = new UserModel({ name: 'John', age: 35 });
+    const jane = new UserModel({ name: 'Jane', age: 34 });
+    const bob = new UserModel({ name: 'Bob', age: 36 });
 
     return utils
       .deleteModelIndexes(UserModel)
@@ -39,7 +39,7 @@ describe("esCount", () => {
                 _id: john._id.toString(),
               },
             },
-            { name: "John", age: 35 },
+            { name: 'John', age: 35 },
             {
               index: {
                 _index: options.index,
@@ -47,7 +47,7 @@ describe("esCount", () => {
                 _id: jane._id.toString(),
               },
             },
-            { name: "Jane", age: 34 },
+            { name: 'Jane', age: 34 },
             {
               index: {
                 _index: options.index,
@@ -55,20 +55,20 @@ describe("esCount", () => {
                 _id: bob._id.toString(),
               },
             },
-            { name: "Bob", age: 36 },
+            { name: 'Bob', age: 36 },
           ],
         });
       });
   });
 
-  it("should handle a lucene query", () => {
-    return UserModel.esCount("name:jane").then((result) => {
+  it('should handle a lucene query', () => {
+    return UserModel.esCount('name:jane').then(result => {
       expect(result.count).to.eql(1);
     });
   });
 
-  it("should accept callback", (done) => {
-    const returned = UserModel.esCount("name:jane", (err, result) => {
+  it('should accept callback', done => {
+    const returned = UserModel.esCount('name:jane', (err, result) => {
       if (err) {
         done(err);
         return;
@@ -79,25 +79,25 @@ describe("esCount", () => {
     });
   });
 
-  it("should handle a full query", () => {
+  it('should handle a full query', () => {
     return UserModel.esCount({
       bool: {
         must: { match_all: {} },
         filter: { range: { age: { lt: 35 } } },
       },
-    }).then((result) => {
+    }).then(result => {
       expect(result.count).to.eql(1);
     });
   });
 
-  it("should handle a short query", () => {
-    return UserModel.esCount({ match: { age: 34 } }).then((result) => {
+  it('should handle a short query', () => {
+    return UserModel.esCount({ match: { age: 34 } }).then(result => {
       expect(result.count).to.eql(1);
     });
   });
 
-  it("should handle 0 hit", () => {
-    return UserModel.esCount({ match: { age: 100 } }).then((result) => {
+  it('should handle 0 hit', () => {
+    return UserModel.esCount({ match: { age: 100 } }).then(result => {
       expect(result.count).to.eql(0);
     });
   });

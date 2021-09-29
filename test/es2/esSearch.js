@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v2;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v2;
 
-describe("esSearch", () => {
+describe('esSearch', () => {
   utils.setup();
   let UserModel;
   let users;
@@ -17,11 +17,11 @@ describe("esSearch", () => {
 
     UserSchema.plugin(plugin);
 
-    UserModel = mongoose.model("User", UserSchema);
+    UserModel = mongoose.model('User', UserSchema);
 
-    const john = new UserModel({ name: "John", age: 35 });
-    const jane = new UserModel({ name: "Jane", age: 34 });
-    const bob = new UserModel({ name: "Bob", age: 36 });
+    const john = new UserModel({ name: 'John', age: 35 });
+    const jane = new UserModel({ name: 'Jane', age: 34 });
+    const bob = new UserModel({ name: 'Bob', age: 36 });
 
     users = {
       john,
@@ -47,7 +47,7 @@ describe("esSearch", () => {
                 _id: john._id.toString(),
               },
             },
-            { name: "John", age: 35 },
+            { name: 'John', age: 35 },
             {
               index: {
                 _index: options.index,
@@ -55,7 +55,7 @@ describe("esSearch", () => {
                 _id: jane._id.toString(),
               },
             },
-            { name: "Jane", age: 34 },
+            { name: 'Jane', age: 34 },
             {
               index: {
                 _index: options.index,
@@ -63,23 +63,23 @@ describe("esSearch", () => {
                 _id: bob._id.toString(),
               },
             },
-            { name: "Bob", age: 36 },
+            { name: 'Bob', age: 36 },
           ],
         });
       });
   });
 
-  it("should handle a lucene query", () => {
-    return UserModel.esSearch("name:jane").then((result) => {
+  it('should handle a lucene query', () => {
+    return UserModel.esSearch('name:jane').then(result => {
       expect(result.hits.total).to.eql(1);
       const hit = result.hits.hits[0];
       expect(hit._id).to.eql(users.jane._id.toString());
-      expect(hit._source).to.eql({ name: "Jane", age: 34 });
+      expect(hit._source).to.eql({ name: 'Jane', age: 34 });
     });
   });
 
-  it("should accept callback", (done) => {
-    const returned = UserModel.esSearch("name:jane", {}, (err, result) => {
+  it('should accept callback', done => {
+    const returned = UserModel.esSearch('name:jane', {}, (err, result) => {
       if (err) {
         done(err);
         return;
@@ -87,14 +87,14 @@ describe("esSearch", () => {
       expect(result.hits.total).to.eql(1);
       const hit = result.hits.hits[0];
       expect(hit._id).to.eql(users.jane._id.toString());
-      expect(hit._source).to.eql({ name: "Jane", age: 34 });
+      expect(hit._source).to.eql({ name: 'Jane', age: 34 });
       expect(returned).to.be.undefined;
       done();
     });
   });
 
-  it("should accept callback without options", (done) => {
-    const returned = UserModel.esSearch("name:jane", (err, result) => {
+  it('should accept callback without options', done => {
+    const returned = UserModel.esSearch('name:jane', (err, result) => {
       if (err) {
         done(err);
         return;
@@ -102,35 +102,35 @@ describe("esSearch", () => {
       expect(result.hits.total).to.eql(1);
       const hit = result.hits.hits[0];
       expect(hit._id).to.eql(users.jane._id.toString());
-      expect(hit._source).to.eql({ name: "Jane", age: 34 });
+      expect(hit._source).to.eql({ name: 'Jane', age: 34 });
       expect(returned).to.be.undefined;
       done();
     });
   });
 
-  it("should handle a full query", () => {
+  it('should handle a full query', () => {
     return UserModel.esSearch({
       query: { match_all: {} },
       filter: { range: { age: { lt: 35 } } },
-    }).then((result) => {
+    }).then(result => {
       expect(result.hits.total).to.eql(1);
       const hit = result.hits.hits[0];
       expect(hit._id).to.eql(users.jane._id.toString());
-      expect(hit._source).to.eql({ name: "Jane", age: 34 });
+      expect(hit._source).to.eql({ name: 'Jane', age: 34 });
     });
   });
 
-  it("should handle a short query", () => {
-    return UserModel.esSearch({ match: { age: 34 } }).then((result) => {
+  it('should handle a short query', () => {
+    return UserModel.esSearch({ match: { age: 34 } }).then(result => {
       expect(result.hits.total).to.eql(1);
       const hit = result.hits.hits[0];
       expect(hit._id).to.eql(users.jane._id.toString());
-      expect(hit._source).to.eql({ name: "Jane", age: 34 });
+      expect(hit._source).to.eql({ name: 'Jane', age: 34 });
     });
   });
 
-  it("should handle 0 hit", () => {
-    return UserModel.esSearch({ match: { age: 100 } }).then((result) => {
+  it('should handle 0 hit', () => {
+    return UserModel.esSearch({ match: { age: 100 } }).then(result => {
       expect(result.hits.total).to.eql(0);
     });
   });

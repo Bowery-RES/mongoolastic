@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const utils = require("../utils");
-const plugin = require("../../").v7;
+const mongoose = require('mongoose');
+const utils = require('../utils');
+const plugin = require('../../').v7;
 
-describe("esRefresh", () => {
+describe('esRefresh', () => {
   utils.setup();
 
-  it("should handle callback", (done) => {
+  it('should handle callback', done => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
@@ -24,7 +24,7 @@ describe("esRefresh", () => {
       })
       .then(() => {
         start = Date.now();
-        UserModel.esRefresh((err) => {
+        UserModel.esRefresh(err => {
           if (err) {
             done(err);
             return;
@@ -33,19 +33,19 @@ describe("esRefresh", () => {
           done();
         });
       })
-      .catch((err) => {
+      .catch(err => {
         done(err);
       });
   });
 
-  it("should handle callback and options", (done) => {
+  it('should handle callback and options', done => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
@@ -56,7 +56,7 @@ describe("esRefresh", () => {
       })
       .then(() => {
         start = Date.now();
-        UserModel.esRefresh({ refreshDelay: 1000 }, (err) => {
+        UserModel.esRefresh({ refreshDelay: 1000 }, err => {
           if (err) {
             done(err);
             return;
@@ -65,19 +65,19 @@ describe("esRefresh", () => {
           done();
         });
       })
-      .catch((err) => {
+      .catch(err => {
         done(err);
       });
   });
 
-  it("should not be delayed", () => {
+  it('should not be delayed', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
@@ -95,14 +95,14 @@ describe("esRefresh", () => {
       });
   });
 
-  it("should be delayed", () => {
+  it('should be delayed', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin);
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
@@ -120,14 +120,14 @@ describe("esRefresh", () => {
       });
   });
 
-  it("should be delayed when defined in plugin", () => {
+  it('should be delayed when defined in plugin', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin, { refreshDelay: 1000 });
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
@@ -145,14 +145,14 @@ describe("esRefresh", () => {
       });
   });
 
-  it("should overwrite defined in plugin value", () => {
+  it('should overwrite defined in plugin value', () => {
     const UserSchema = new mongoose.Schema({
       name: String,
     });
 
     UserSchema.plugin(plugin, { refreshDelay: 1000 });
 
-    const UserModel = mongoose.model("User", UserSchema);
+    const UserModel = mongoose.model('User', UserSchema);
 
     let start;
 
