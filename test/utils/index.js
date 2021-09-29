@@ -10,7 +10,7 @@ function array(mixed) {
 
 function setup() {
   before(done => {
-    global.expect = require('chai').expect; // eslint-disable-line
+    global.expect = require("chai").expect; // eslint-disable-line
     mongoose.connect('mongodb://localhost/test', err => {
       if (err) {
         done(err);
